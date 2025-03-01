@@ -6,59 +6,22 @@ const MainTheme = createSystem(defaultConfig, {
       colors: {
         background: {
           value: {
-            base: "#FFFEF5",
-            _dark: "#1D1C14",
+            base: "#f8f8f2", //
+            _dark: "#282a36", // dark blue
           },
         },
-        black: {
+        foreground: {
           value: {
-            base: "#2C2C2C",
-            _dark: "#FFFFFF",
-          },
-        },
-        buttonText: {
-          value: {
-            base: "#2C2C2C",
-            _dark: "#2C2C2C",
-          },
-        },
-        main: {
-          solid: { value: "#FFFBB4" },
-          contrast: { value: "#FFFBB4" },
-          fg: { value: "#FFFBB4" },
-          muted: { value: "#FFFBB4" },
-          subtle: { value: "#FFFBB4" },
-          emphasized: { value: "#FFFBB4" },
-          focusRing: { value: "#FFFBB4" },
-          value: {
-            base: "#FFFBB4",
-            _dark: "#FFFBB4",
-          },
-        },
-        white: {
-          value: {
-            base: "#FFFFFF",
-            _dark: "#262626",
-          },
-        },
-        outline: {
-          value: {
-            base: "#2C2C2C",
-            _dark: "#6A6A6A",
-          },
-        },
-        grey: {
-          value: {
-            base: "#C1C1C1",
-            _dark: "#C1C1C1",
+            base: "#282a36", // dark blue
+            _dark: "#f8f8f2", //
           },
         },
       },
       shadows: {
         button: {
           value: {
-            base: "0 1px 2px 2px rgba(218, 218, 218, 0.56)",
-            _dark: "0 1px 2px 2px rgba(218, 218, 218, 0.56)",
+            base: "0 1px 2px 2px rgba(40, 42, 54, 25, .25)",
+            _dark: "0 1px 2px 2px rgba(40, 42, 54, 25, .25)",
           },
         },
       },

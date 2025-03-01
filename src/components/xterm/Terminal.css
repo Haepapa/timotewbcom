@@ -1,0 +1,5 @@
+div[style*="width: 50000px"],
+div[style*="top: -50000px"] {
+  width: 0 !important;
+  overflow: hidden !important;
+}
