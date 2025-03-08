@@ -35,22 +35,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check if PR is approved
-        id: pr-approval
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { data: reviews } = await github.pulls.listReviews({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: context.issue.number,
-            });
-
-            const approved = reviews.some(review => review.state === 'APPROVED');
-            return approved;
-
       - name: Add .env File
-        if: steps.pr-approval.outputs.result == 'true'
         run: |
           if [[ "${{ github.ref_name }}" == "test" ]]; then
             echo Branch Name: "${{ github.ref_name }}"
