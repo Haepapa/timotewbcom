@@ -1,5 +1,3 @@
-import React from "react";
-
 export function whoami() {
   return (
     <div className="space-y-1">

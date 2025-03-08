@@ -1,4 +1,4 @@
-import type React, { JSX } from "react";
+import type { JSX } from "react";
 
 import { useState, useRef, useEffect } from "react";
 import { Command, Plus, X } from "lucide-react";
@@ -8,7 +8,7 @@ import { date } from "./commands/date";
 import { echo } from "./commands/echo";
 import { whoami } from "./commands/whoami";
 import { theme as themecmd } from "./commands/theme";
-import { ThemeType, CommandType, TerminalTabType } from "@/types/terminal";
+import { ThemeType, TerminalTabType } from "@/types/terminal";
 
 export default function Terminal() {
   const [tabs, setTabs] = useState<TerminalTabType[]>([

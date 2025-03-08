@@ -1,3 +1,5 @@
+import type { JSX } from "react";
+
 export type ThemeType = "dark" | "light" | "system";
 
 export type CommandType = {
