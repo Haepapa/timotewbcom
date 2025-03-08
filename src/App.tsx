@@ -1,7 +1,11 @@
-import "./App.css";
+import Terminal from "@/components/terminal";
 
 function App() {
-  return <>New App</>;
+  return (
+    <main className="min-h-screen bg-zinc-900">
+      <Terminal />
+    </main>
+  );
 }
 
 export default App;
