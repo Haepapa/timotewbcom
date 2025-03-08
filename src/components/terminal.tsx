@@ -1,23 +1,14 @@
-import type React from "react"
+import type React, { JSX } from "react";
 
-import { useState, useRef, useEffect } from "react"
-import { Command, Plus, X } from "lucide-react"
-import { cn } from "@/lib/utils"
-
-type CommandType = {
-  input: string
-  output: string | JSX.Element
-  timestamp: Date
-}
-
-type TerminalTabType = {
-  id: string
-  name: string
-  history: CommandType[]
-  input: string
-}
-
-type ThemeType = "dark" | "light" | "system"
+import { useState, useRef, useEffect } from "react";
+import { Command, Plus, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { help } from "./commands/help";
+import { date } from "./commands/date";
+import { echo } from "./commands/echo";
+import { whoami } from "./commands/whoami";
+import { theme as themecmd } from "./commands/theme";
+import { ThemeType, CommandType, TerminalTabType } from "@/types/terminal";
 
 export default function Terminal() {
   const [tabs, setTabs] = useState<TerminalTabType[]>([
@@ -31,7 +22,8 @@ export default function Terminal() {
             <div className="text-emerald-400 font-semibold">
               <p>Welcome to the Terminal</p>
               <p className="text-zinc-400 mt-1">
-                Type <span className="text-yellow-300">help</span> to see available commands
+                Type <span className="text-yellow-300">help</span> to see
+                available commands
               </p>
             </div>
           ),
@@ -40,211 +32,141 @@ export default function Terminal() {
       ],
       input: "",
     },
-  ])
+  ]);
 
-  const [activeTabId, setActiveTabId] = useState("1")
-  const [cursorVisible, setCursorVisible] = useState(true)
-  const [theme, setTheme] = useState<ThemeType>("dark")
-  const inputRef = useRef<HTMLInputElement>(null)
-  const terminalRef = useRef<HTMLDivElement>(null)
+  const [activeTabId, setActiveTabId] = useState("1");
+  const [cursorVisible, setCursorVisible] = useState(true);
+  const [theme, setTheme] = useState<ThemeType>("dark");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
 
-  const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0]
+  const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
     // Check localStorage first
-    const savedTheme = localStorage.getItem("terminal-theme") as ThemeType | null
+    const savedTheme = localStorage.getItem(
+      "terminal-theme"
+    ) as ThemeType | null;
 
     if (savedTheme) {
-      setTheme(savedTheme)
-    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark")
+      setTheme(savedTheme);
+    } else if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setTheme("dark");
     } else {
-      setTheme("light")
+      setTheme("light");
     }
-  }, [])
+  }, []);
 
   // Apply theme changes
   useEffect(() => {
-    const root = document.documentElement
+    const root = document.documentElement;
 
     if (theme === "dark") {
-      root.classList.add("dark")
-      localStorage.setItem("terminal-theme", "dark")
+      root.classList.add("dark");
+      localStorage.setItem("terminal-theme", "dark");
     } else if (theme === "light") {
-      root.classList.remove("dark")
-      localStorage.setItem("terminal-theme", "light")
+      root.classList.remove("dark");
+      localStorage.setItem("terminal-theme", "light");
     } else if (theme === "system") {
-      localStorage.setItem("terminal-theme", "system")
-      if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        root.classList.add("dark")
+      localStorage.setItem("terminal-theme", "system");
+      if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
+        root.classList.add("dark");
       } else {
-        root.classList.remove("dark")
+        root.classList.remove("dark");
       }
     }
-  }, [theme])
+  }, [theme]);
 
   // Listen for system theme changes if in system mode
   useEffect(() => {
-    if (theme !== "system") return
+    if (theme !== "system") return;
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const handleChange = (e: MediaQueryListEvent) => {
-      const root = document.documentElement
+      const root = document.documentElement;
       if (e.matches) {
-        root.classList.add("dark")
+        root.classList.add("dark");
       } else {
-        root.classList.remove("dark")
+        root.classList.remove("dark");
       }
-    }
+    };
 
-    mediaQuery.addEventListener("change", handleChange)
-    return () => mediaQuery.removeEventListener("change", handleChange)
-  }, [theme])
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [theme]);
 
   // Blink cursor
   useEffect(() => {
     const interval = setInterval(() => {
-      setCursorVisible((prev) => !prev)
-    }, 530)
-    return () => clearInterval(interval)
-  }, [])
+      setCursorVisible((prev) => !prev);
+    }, 530);
+    return () => clearInterval(interval);
+  }, []);
 
   // Auto focus input
   useEffect(() => {
     const handleClick = () => {
-      inputRef.current?.focus()
-    }
-    document.addEventListener("click", handleClick)
-    return () => document.removeEventListener("click", handleClick)
-  }, [])
+      inputRef.current?.focus();
+    };
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, []);
 
   // Auto scroll to bottom
   useEffect(() => {
     if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [])
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!activeTab.input.trim()) return
+    e.preventDefault();
+    if (!activeTab.input.trim()) return;
 
-    const command = activeTab.input.trim()
-    let output: string | JSX.Element = ""
+    const command = activeTab.input.trim();
+    let output: string | JSX.Element = "";
 
     // Process commands
     if (command.toLowerCase().startsWith("theme")) {
-      const args = command.split(" ")
-
-      if (args.length === 1) {
-        // Just 'theme' command without flags
-        output = (
-          <div className="space-y-1">
-            <p className="text-emerald-400 font-semibold">
-              Current Theme: <span className="text-white">{theme}</span>
-            </p>
-            <p className="mt-2">
-              Usage: <span className="text-yellow-300">theme [option]</span>
-            </p>
-            <p>Options:</p>
-            <p>
-              <span className="text-yellow-300">-d, --dark</span> - Switch to dark theme
-            </p>
-            <p>
-              <span className="text-yellow-300">-l, --light</span> - Switch to light theme
-            </p>
-            <p>
-              <span className="text-yellow-300">-s, --system</span> - Use system theme preference
-            </p>
-          </div>
-        )
-      } else {
-        const flag = args[1].toLowerCase()
-
-        if (flag === "-d" || flag === "--dark") {
-          setTheme("dark")
-          output = "Theme set to dark mode."
-        } else if (flag === "-l" || flag === "--light") {
-          setTheme("light")
-          output = "Theme set to light mode."
-        } else if (flag === "-s" || flag === "--system") {
-          setTheme("system")
-          output = "Theme set to follow system preference."
-        } else {
-          output = (
-            <span className="text-red-400">Unknown option: {flag}. Use -d/--dark, -l/--light, or -s/--system.</span>
-          )
-        }
-      }
+      output = themecmd(command, setTheme);
     } else {
       switch (command.toLowerCase()) {
         case "help":
-          output = (
-            <div className="space-y-1">
-              <p className="text-emerald-400 font-semibold">Available Commands:</p>
-              <p>
-                <span className="text-yellow-300">help</span> - Show this help message
-              </p>
-              <p>
-                <span className="text-yellow-300">clear</span> - Clear the terminal
-              </p>
-              <p>
-                <span className="text-yellow-300">date</span> - Show current date and time
-              </p>
-              <p>
-                <span className="text-yellow-300">echo [text]</span> - Echo back your text
-              </p>
-              <p>
-                <span className="text-yellow-300">whoami</span> - Display user info
-              </p>
-              <p>
-                <span className="text-yellow-300">theme [option]</span> - Change terminal theme
-              </p>
-              <p className="ml-4">
-                <span className="text-yellow-300">-d, --dark</span> - Switch to dark theme
-              </p>
-              <p className="ml-4">
-                <span className="text-yellow-300">-l, --light</span> - Switch to light theme
-              </p>
-              <p className="ml-4">
-                <span className="text-yellow-300">-s, --system</span> - Use system theme preference
-              </p>
-            </div>
-          )
-          break
+          output = help();
+          break;
         case "clear":
-          setTabs((prev) => prev.map((tab) => (tab.id === activeTabId ? { ...tab, history: [] } : tab)))
-          updateTabInput("")
-          return
+          setTabs((prev) =>
+            prev.map((tab) =>
+              tab.id === activeTabId ? { ...tab, history: [] } : tab
+            )
+          );
+          updateTabInput("");
+          return;
         case "date":
-          output = `Current date: ${new Date().toLocaleString()}`
-          break
+          output = date();
+          break;
         case "whoami":
-          output = (
-            <div className="space-y-1">
-              <p className="text-emerald-400">
-                User: <span className="text-white">guest</span>
-              </p>
-              <p className="text-emerald-400">
-                Role: <span className="text-white">visitor</span>
-              </p>
-              <p className="text-emerald-400">
-                Session: <span className="text-white">{Math.random().toString(36).substring(2, 10)}</span>
-              </p>
-            </div>
-          )
-          break
+          output = whoami();
+          break;
         default:
           if (command.toLowerCase().startsWith("echo ")) {
-            output = command.substring(5)
+            output = echo(command.substring(5));
           } else {
             output = (
               <span className="text-red-400">
-                Command not found: {command}. Type <span className="text-yellow-300">help</span> for available commands.
+                Command not found: {command}. Type{" "}
+                <span className="text-yellow-300">help</span> for available
+                commands.
               </span>
-            )
+            );
           }
       }
     }
@@ -263,19 +185,23 @@ export default function Terminal() {
                 },
               ],
             }
-          : tab,
-      ),
-    )
+          : tab
+      )
+    );
 
-    updateTabInput("")
-  }
+    updateTabInput("");
+  };
 
   const updateTabInput = (value: string) => {
-    setTabs((prev) => prev.map((tab) => (tab.id === activeTabId ? { ...tab, input: value } : tab)))
-  }
+    setTabs((prev) =>
+      prev.map((tab) =>
+        tab.id === activeTabId ? { ...tab, input: value } : tab
+      )
+    );
+  };
 
   const addNewTab = () => {
-    const newId = (tabs.length + 1).toString()
+    const newId = (tabs.length + 1).toString();
     const newTab: TerminalTabType = {
       id: newId,
       name: `Terminal ${newId}`,
@@ -286,7 +212,8 @@ export default function Terminal() {
             <div className="text-emerald-400 font-semibold">
               <p>Welcome to the Terminal</p>
               <p className="text-zinc-400 mt-1">
-                Type <span className="text-yellow-300">help</span> to see available commands
+                Type <span className="text-yellow-300">help</span> to see
+                available commands
               </p>
             </div>
           ),
@@ -294,25 +221,25 @@ export default function Terminal() {
         },
       ],
       input: "",
-    }
+    };
 
-    setTabs((prev) => [...prev, newTab])
-    setActiveTabId(newId)
-  }
+    setTabs((prev) => [...prev, newTab]);
+    setActiveTabId(newId);
+  };
 
   const closeTab = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
 
-    if (tabs.length === 1) return // Don't close the last tab
+    if (tabs.length === 1) return; // Don't close the last tab
 
-    const newTabs = tabs.filter((tab) => tab.id !== id)
-    setTabs(newTabs)
+    const newTabs = tabs.filter((tab) => tab.id !== id);
+    setTabs(newTabs);
 
     // If we're closing the active tab, switch to the first available tab
     if (id === activeTabId) {
-      setActiveTabId(newTabs[0].id)
+      setActiveTabId(newTabs[0].id);
     }
-  }
+  };
 
   const themeClasses = {
     dark: {
@@ -325,27 +252,31 @@ export default function Terminal() {
       footer: "bg-zinc-800 border-zinc-700 text-zinc-500",
     },
     light: {
-      header: "bg-gray-100 border-gray-200",
+      header: "bg-gray-200 border-gray-300",
       tab: {
-        active: "bg-white text-gray-800",
-        inactive: "bg-gray-100 text-gray-600 hover:bg-gray-200",
+        active: "bg-gray-100 text-gray-800",
+        inactive: "bg-gray-200 text-gray-600 hover:bg-gray-200",
       },
-      content: "bg-white text-gray-800",
-      footer: "bg-gray-100 border-gray-200 text-gray-500",
+      content: "bg-gray-100 text-gray-800",
+      footer: "bg-gray-200 border-gray-200 text-gray-500",
     },
-  }
+  };
 
   // Determine which theme classes to use
   const currentTheme =
-    theme === "system" ? (document.documentElement.classList.contains("dark") ? "dark" : "light") : theme
+    theme === "system"
+      ? document.documentElement.classList.contains("dark")
+        ? "dark"
+        : "light"
+      : theme;
 
-  const classes = themeClasses[currentTheme as keyof typeof themeClasses]
+  const classes = themeClasses[currentTheme as keyof typeof themeClasses];
 
   return (
     <div
       className={cn(
         "h-screen w-full overflow-hidden border-zinc-700 shadow-2xl",
-        currentTheme === "dark" ? "border-zinc-700" : "border-gray-200",
+        currentTheme === "dark" ? "border-zinc-700" : "border-gray-200"
       )}
     >
       {/* Terminal header with tabs */}
@@ -359,14 +290,21 @@ export default function Terminal() {
                 onClick={() => setActiveTabId(tab.id)}
                 className={cn(
                   "flex items-center px-4 py-2 text-sm border-r",
-                  currentTheme === "dark" ? "border-zinc-700" : "border-gray-200",
-                  tab.id === activeTabId ? classes.tab.active : classes.tab.inactive,
+                  currentTheme === "dark"
+                    ? "border-zinc-700"
+                    : "border-gray-200",
+                  tab.id === activeTabId
+                    ? classes.tab.active
+                    : classes.tab.inactive
                 )}
               >
                 <Command className="w-3 h-3 mr-2" />
                 <span className="truncate">{tab.name}</span>
                 {tabs.length > 1 && (
-                  <X className="w-3 h-3 ml-2 opacity-60 hover:opacity-100" onClick={(e) => closeTab(tab.id, e)} />
+                  <X
+                    className="w-3 h-3 ml-2 opacity-60 hover:opacity-100"
+                    onClick={(e) => closeTab(tab.id, e)}
+                  />
                 )}
               </button>
             ))}
@@ -379,7 +317,7 @@ export default function Terminal() {
               "px-3 py-2",
               currentTheme === "dark"
                 ? "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700"
-                : "text-gray-600 hover:text-gray-800 hover:bg-gray-200",
+                : "text-gray-600 hover:text-gray-800 hover:bg-gray-200"
             )}
           >
             <Plus className="w-4 h-4" />
@@ -390,7 +328,10 @@ export default function Terminal() {
       {/* Terminal content */}
       <div
         ref={terminalRef}
-        className={cn("p-4 h-[calc(100vh-80px)] overflow-y-auto font-mono text-sm", classes.content)}
+        className={cn(
+          "p-4 h-[calc(100vh-80px)] overflow-y-auto font-mono text-sm",
+          classes.content
+        )}
       >
         {activeTab.history.map((cmd, index) => (
           <div key={index} className="mb-4">
@@ -416,13 +357,19 @@ export default function Terminal() {
               className="w-full bg-transparent outline-none caret-transparent"
               autoFocus
             />
-            <span className="absolute left-0 top-0 whitespace-pre">{activeTab.input}</span>
+            <span className="absolute left-0 top-0 whitespace-pre">
+              {activeTab.input}
+            </span>
             <span
               className={cn(
                 "absolute top-0 left-0 ml-[calc(1ch*var(--cursor-position))]",
-                cursorVisible ? "opacity-100" : "opacity-0",
+                cursorVisible ? "opacity-100" : "opacity-0"
               )}
-              style={{ "--cursor-position": activeTab.input.length } as React.CSSProperties}
+              style={
+                {
+                  "--cursor-position": activeTab.input.length,
+                } as React.CSSProperties
+              }
             >
               ▎
             </span>
@@ -431,11 +378,15 @@ export default function Terminal() {
       </div>
 
       {/* Terminal footer */}
-      <div className={cn("px-4 py-2 border-t text-xs flex justify-between", classes.footer)}>
+      <div
+        className={cn(
+          "px-4 py-2 border-t text-xs flex justify-between",
+          classes.footer
+        )}
+      >
         <span>Terminal v1.0</span>
         <span>{new Date().toLocaleTimeString()}</span>
       </div>
     </div>
-  )
+  );
 }
-
