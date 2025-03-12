@@ -3,10 +3,11 @@ import type { JSX } from "react";
 import { useState, useRef, useEffect } from "react";
 import { Command, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { help } from "./commands/help";
-import { date } from "./commands/date";
-import { echo } from "./commands/echo";
-import { whoami } from "./commands/whoami";
+import help from "./commands/help";
+import date from "./commands/date";
+import echo from "./commands/echo";
+import whoami from "./commands/whoami";
+import welcome from "./commands/welcome";
 import { theme as themecmd } from "./commands/theme";
 import { ThemeType, TerminalTabType } from "@/types/terminal";
 
@@ -82,15 +83,7 @@ export default function Terminal() {
       history: [
         {
           input: "",
-          output: (
-            <div className="text-term-green font-semibold">
-              <p>Welcome to the Terminal</p>
-              <p className="text-term-gray mt-1">
-                Type <span className="text-term-blue">help</span> to see
-                available commands
-              </p>
-            </div>
-          ),
+          output: welcome(),
           timestamp: new Date(),
         },
       ],
@@ -230,15 +223,7 @@ export default function Terminal() {
       history: [
         {
           input: "",
-          output: (
-            <div className="text-term-green font-semibold">
-              <p>Welcome to the Terminal</p>
-              <p className="text-term-gray mt-1">
-                Type <span className="text-term-blue">help</span> to see
-                available commands
-              </p>
-            </div>
-          ),
+          output: welcome(),
           timestamp: new Date(),
         },
       ],
