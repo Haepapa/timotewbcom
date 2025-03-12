@@ -9,7 +9,6 @@ import { echo } from "./commands/echo";
 import { whoami } from "./commands/whoami";
 import { theme as themecmd } from "./commands/theme";
 import { ThemeType, TerminalTabType } from "@/types/terminal";
-import { themeClasses } from "@/theme";
 
 export default function Terminal() {
   //----------------------------------------------------------------------------------------
@@ -73,8 +72,6 @@ export default function Terminal() {
         : "light"
       : theme;
 
-  const classes = themeClasses[currentTheme as keyof typeof themeClasses];
-
   //----------------------------------------------------------------------------------------
   // Tabs
   //----------------------------------------------------------------------------------------
@@ -86,10 +83,10 @@ export default function Terminal() {
         {
           input: "",
           output: (
-            <div className={cn(classes.text.heading, "font-semibold")}>
+            <div className="text-term-green font-semibold">
               <p>Welcome to the Terminal</p>
-              <p className="text-zinc-400 mt-1">
-                Type <span className={classes.text.command}>help</span> to see
+              <p className="text-term-gray mt-1">
+                Type <span className="text-term-blue">help</span> to see
                 available commands
               </p>
             </div>
@@ -165,7 +162,7 @@ export default function Terminal() {
     } else {
       switch (command.toLowerCase()) {
         case "help":
-          output = help(classes);
+          output = help();
           break;
         case "clear":
           setTabs((prev) =>
@@ -188,7 +185,7 @@ export default function Terminal() {
             output = (
               <span className="text-red-400">
                 Command not found: {command}. Type{" "}
-                <span className={classes.text.command}>help</span> for available
+                <span className="text-term-blue">help</span> for available
                 commands.
               </span>
             );
@@ -234,11 +231,11 @@ export default function Terminal() {
         {
           input: "",
           output: (
-            <div className={cn(classes.text.heading, "font-semibold")}>
+            <div className="text-term-green font-semibold">
               <p>Welcome to the Terminal</p>
-              <p className="text-zinc-400 mt-1">
-                Type <span className={cn(classes.text.command)}>help</span> to
-                see available commands
+              <p className="text-term-gray mt-1">
+                Type <span className="text-term-blue">help</span> to see
+                available commands
               </p>
             </div>
           ),
@@ -266,14 +263,9 @@ export default function Terminal() {
     }
   };
   return (
-    <div
-      className={cn(
-        "h-screen w-full overflow-hidden border-zinc-700 shadow-2xl",
-        currentTheme === "dark" ? "border-zinc-700" : "border-gray-200"
-      )}
-    >
+    <div className="h-screen w-full overflow-hidden shadow-2xl border-header-border">
       {/* Terminal header with tabs */}
-      <div className={cn("border-b", classes.header)}>
+      <div className="border-b bg-header-background border-header-border">
         <div className="flex items-center">
           {/* Tab list */}
           <div className="flex-1 flex overflow-x-auto scrollbar-hide">
@@ -282,13 +274,10 @@ export default function Terminal() {
                 key={tab.id}
                 onClick={() => setActiveTabId(tab.id)}
                 className={cn(
-                  "flex items-center px-4 py-2 text-sm border-r",
-                  currentTheme === "dark"
-                    ? "border-zinc-700"
-                    : "border-gray-200",
+                  "flex items-center px-4 py-2 text-sm border-r border-header-border",
                   tab.id === activeTabId
-                    ? classes.tab.active
-                    : classes.tab.inactive
+                    ? "bg-tab-active-bg"
+                    : "bg-tab-inactive-bg"
                 )}
               >
                 <Command className="w-3 h-3 mr-2" />
@@ -306,12 +295,7 @@ export default function Terminal() {
           {/* Add new tab button */}
           <button
             onClick={addNewTab}
-            className={cn(
-              "px-3 py-2",
-              currentTheme === "dark"
-                ? "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700"
-                : "text-gray-600 hover:text-gray-800 hover:bg-gray-200"
-            )}
+            className="px-3 py-2 text-new-tab-btn-text hover:text-tab-btn-text-hover hover:bg-tab-btn-bg-hover"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -321,18 +305,13 @@ export default function Terminal() {
       {/* Terminal content */}
       <div
         ref={terminalRef}
-        className={cn(
-          "p-4 h-[calc(100vh-80px)] overflow-y-auto font-mono text-sm",
-          classes.content
-        )}
+        className="p-4 h-[calc(100vh-80px)] overflow-y-auto font-mono text-sm bg-tab-active-bg text-new-tab-btn-text-hover"
       >
         {activeTab.history.map((cmd, index) => (
           <div key={index} className="mb-4">
             {cmd.input && (
               <div className="flex">
-                <span className={cn(classes.text.heading, "mr-2")}>
-                  guest@terminal:~$
-                </span>
+                <span className="text-term-blue mr-2">guest@terminal:~$</span>
                 <span>{cmd.input}</span>
               </div>
             )}
@@ -342,9 +321,7 @@ export default function Terminal() {
 
         {/* Current input line */}
         <form onSubmit={handleSubmit} className="flex">
-          <span className={cn(classes.text.heading, "mr-2")}>
-            guest@terminal:~$
-          </span>
+          <span className="text-term-blue mr-2">guest@terminal:~$</span>
           <div className="flex-1 relative">
             <input
               ref={inputRef}
@@ -375,12 +352,7 @@ export default function Terminal() {
       </div>
 
       {/* Terminal footer */}
-      <div
-        className={cn(
-          "px-4 py-2 border-t text-xs flex justify-between",
-          classes.footer
-        )}
-      >
+      <div className="px-4 py-2 border-t text-xs flex justify-between bg-header-bg border-header-border text-footer-text">
         <span>Terminal v1.0</span>
         <span>{new Date().toLocaleTimeString()}</span>
       </div>

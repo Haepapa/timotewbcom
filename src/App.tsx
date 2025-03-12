@@ -2,7 +2,7 @@ import Terminal from "@/components/terminal";
 
 function App() {
   return (
-    <main className="min-h-screen bg-zinc-900">
+    <main className="min-h-screen bg-background">
       <Terminal />
     </main>
   );
