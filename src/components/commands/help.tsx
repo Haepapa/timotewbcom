@@ -27,6 +27,13 @@ export default function help() {
       <p className="ml-4">-d, --dark - Switch to dark theme</p>
       <p className="ml-4">-l, --light - Switch to light theme</p>
       <p className="ml-4">-s, --system - Use system theme preference</p>
+      <p>
+        <span className="cust-command-style">cv</span> [option] - View my CV
+      </p>
+      <p className="ml-4">-a, --about - About Me</p>
+      <p className="ml-4">
+        -tc, --technical-competencies - My technical competencies
+      </p>
     </div>
   );
 }

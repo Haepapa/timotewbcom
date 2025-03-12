@@ -1,13 +1,14 @@
 import type { JSX } from "react";
 
 import { useState, useRef, useEffect } from "react";
-import { Command, Plus, X } from "lucide-react";
+import { Plus, X, Terminal as TerminalSVG } from "lucide-react";
 import { cn } from "@/lib/utils";
 import help from "./commands/help";
 import date from "./commands/date";
 import echo from "./commands/echo";
 import whoami from "./commands/whoami";
 import welcome from "./commands/welcome";
+import cv from "./commands/cv";
 import { theme as themecmd } from "./commands/theme";
 import { ThemeType, TerminalTabType } from "@/types/terminal";
 
@@ -151,7 +152,9 @@ export default function Terminal() {
 
     // Process commands
     if (command.toLowerCase().startsWith("theme")) {
-      output = themecmd(command, setTheme);
+      output = themecmd(command, setTheme, theme);
+    } else if (command.toLowerCase().startsWith("cv")) {
+      output = cv(command);
     } else {
       switch (command.toLowerCase()) {
         case "help":
@@ -265,7 +268,7 @@ export default function Terminal() {
                     : "bg-tab-inactive-bg"
                 )}
               >
-                <Command className="w-3 h-3 mr-2" />
+                <TerminalSVG className="w-3 h-3 mr-2" />
                 <span className="truncate">{tab.name}</span>
                 {tabs.length > 1 && (
                   <X
@@ -338,7 +341,7 @@ export default function Terminal() {
 
       {/* Terminal footer */}
       <div className="px-4 py-2 border-t text-xs flex justify-between bg-header-bg border-header-border text-footer-text">
-        <span>Terminal v1.0</span>
+        <span>Terminal v2.0</span>
         <span>{new Date().toLocaleTimeString()}</span>
       </div>
     </div>
