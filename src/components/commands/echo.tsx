@@ -1,3 +1,3 @@
-export function echo(text: string) {
+export default function echo(text: string) {
   return text;
 }
