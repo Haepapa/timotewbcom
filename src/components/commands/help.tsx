@@ -1,39 +1,59 @@
-export function help() {
+import { cn } from "@/lib/utils";
+import { themeClassesType } from "@/types/theme";
+
+export function help(classes: themeClassesType) {
   return (
     <div className="space-y-1">
-      <p className="text-emerald-400 font-semibold">Available Commands:</p>
-      <p>
-        <span className="text-yellow-300">help</span> - Show this help message
+      <p className={cn(classes.text.heading, "font-semibold")}>
+        Available Commands:
       </p>
       <p>
-        <span className="text-yellow-300">clear</span> - Clear the terminal
+        <span className={cn(classes.text.command, "font-semibold")}>help</span>{" "}
+        - Show this help message
       </p>
       <p>
-        <span className="text-yellow-300">date</span> - Show current date and
-        time
+        <span className={cn(classes.text.command, "font-semibold")}>clear</span>{" "}
+        - Clear the terminal
       </p>
       <p>
-        <span className="text-yellow-300">echo [text]</span> - Echo back your
-        text
+        <span className={cn(classes.text.command, "font-semibold")}>date</span>{" "}
+        - Show current date and time
       </p>
       <p>
-        <span className="text-yellow-300">whoami</span> - Display user info
+        <span className={cn(classes.text.command, "font-semibold")}>
+          echo [text]
+        </span>{" "}
+        - Echo back your text
       </p>
       <p>
-        <span className="text-yellow-300">theme [option]</span> - Change
-        terminal theme
+        <span className={cn(classes.text.command, "font-semibold")}>
+          whoami
+        </span>{" "}
+        - Display user info
+      </p>
+      <p>
+        <span className={cn(classes.text.command, "font-semibold")}>
+          theme [option]
+        </span>{" "}
+        - Change terminal theme
       </p>
       <p className="ml-4">
-        <span className="text-yellow-300">-d, --dark</span> - Switch to dark
-        theme
+        <span className={cn(classes.text.command, "font-semibold")}>
+          -d, --dark
+        </span>{" "}
+        - Switch to dark theme
       </p>
       <p className="ml-4">
-        <span className="text-yellow-300">-l, --light</span> - Switch to light
-        theme
+        <span className={cn(classes.text.command, "font-semibold")}>
+          -l, --light
+        </span>{" "}
+        - Switch to light theme
       </p>
       <p className="ml-4">
-        <span className="text-yellow-300">-s, --system</span> - Use system theme
-        preference
+        <span className={cn(classes.text.command, "font-semibold")}>
+          -s, --system
+        </span>{" "}
+        - Use system theme preference
       </p>
     </div>
   );

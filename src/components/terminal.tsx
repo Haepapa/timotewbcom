@@ -9,59 +9,21 @@ import { echo } from "./commands/echo";
 import { whoami } from "./commands/whoami";
 import { theme as themecmd } from "./commands/theme";
 import { ThemeType, TerminalTabType } from "@/types/terminal";
+import { themeClasses } from "@/theme";
 
 export default function Terminal() {
-  const [tabs, setTabs] = useState<TerminalTabType[]>([
-    {
-      id: "1",
-      name: "Terminal 1",
-      history: [
-        {
-          input: "",
-          output: (
-            <div className="text-emerald-400 font-semibold">
-              <p>Welcome to the Terminal</p>
-              <p className="text-zinc-400 mt-1">
-                Type <span className="text-yellow-300">help</span> to see
-                available commands
-              </p>
-            </div>
-          ),
-          timestamp: new Date(),
-        },
-      ],
-      input: "",
-    },
-  ]);
-
+  //----------------------------------------------------------------------------------------
+  // Vars
+  //----------------------------------------------------------------------------------------
   const [activeTabId, setActiveTabId] = useState("1");
   const [cursorVisible, setCursorVisible] = useState(true);
-  const [theme, setTheme] = useState<ThemeType>("dark");
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
-
-  // Initialize theme from localStorage or system preference
-  useEffect(() => {
-    // Check localStorage first
-    const savedTheme = localStorage.getItem(
-      "terminal-theme"
-    ) as ThemeType | null;
-
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      setTheme("dark");
-    } else {
-      setTheme("light");
-    }
-  }, []);
-
-  // Apply theme changes
+  //----------------------------------------------------------------------------------------
+  // Theme and color mode
+  //----------------------------------------------------------------------------------------
+  const [theme, setTheme] = useState<ThemeType>("dark");
   useEffect(() => {
     const root = document.documentElement;
 
@@ -103,6 +65,66 @@ export default function Terminal() {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
 
+  // Determine which theme classes to use
+  const currentTheme =
+    theme === "system"
+      ? document.documentElement.classList.contains("dark")
+        ? "dark"
+        : "light"
+      : theme;
+
+  const classes = themeClasses[currentTheme as keyof typeof themeClasses];
+
+  //----------------------------------------------------------------------------------------
+  // Tabs
+  //----------------------------------------------------------------------------------------
+  const [tabs, setTabs] = useState<TerminalTabType[]>([
+    {
+      id: "1",
+      name: "Terminal 1",
+      history: [
+        {
+          input: "",
+          output: (
+            <div className={cn(classes.text.heading, "font-semibold")}>
+              <p>Welcome to the Terminal</p>
+              <p className="text-zinc-400 mt-1">
+                Type <span className={classes.text.command}>help</span> to see
+                available commands
+              </p>
+            </div>
+          ),
+          timestamp: new Date(),
+        },
+      ],
+      input: "",
+    },
+  ]);
+
+  const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
+
+  //----------------------------------------------------------------------------------------
+  // Terminal UI
+  //----------------------------------------------------------------------------------------
+  // Initialize theme from localStorage or system preference
+  useEffect(() => {
+    // Check localStorage first
+    const savedTheme = localStorage.getItem(
+      "terminal-theme"
+    ) as ThemeType | null;
+
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  }, []);
+
   // Blink cursor
   useEffect(() => {
     const interval = setInterval(() => {
@@ -127,6 +149,9 @@ export default function Terminal() {
     }
   }, []);
 
+  //----------------------------------------------------------------------------------------
+  // Commands
+  //----------------------------------------------------------------------------------------
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!activeTab.input.trim()) return;
@@ -140,7 +165,7 @@ export default function Terminal() {
     } else {
       switch (command.toLowerCase()) {
         case "help":
-          output = help();
+          output = help(classes);
           break;
         case "clear":
           setTabs((prev) =>
@@ -163,7 +188,7 @@ export default function Terminal() {
             output = (
               <span className="text-red-400">
                 Command not found: {command}. Type{" "}
-                <span className="text-yellow-300">help</span> for available
+                <span className={classes.text.command}>help</span> for available
                 commands.
               </span>
             );
@@ -209,11 +234,11 @@ export default function Terminal() {
         {
           input: "",
           output: (
-            <div className="text-emerald-400 font-semibold">
+            <div className={cn(classes.text.heading, "font-semibold")}>
               <p>Welcome to the Terminal</p>
               <p className="text-zinc-400 mt-1">
-                Type <span className="text-yellow-300">help</span> to see
-                available commands
+                Type <span className={cn(classes.text.command)}>help</span> to
+                see available commands
               </p>
             </div>
           ),
@@ -240,38 +265,6 @@ export default function Terminal() {
       setActiveTabId(newTabs[0].id);
     }
   };
-
-  const themeClasses = {
-    dark: {
-      header: "bg-zinc-800 border-zinc-700",
-      tab: {
-        active: "bg-zinc-900 text-zinc-200",
-        inactive: "bg-zinc-800 text-zinc-400 hover:bg-zinc-700",
-      },
-      content: "bg-zinc-900 text-zinc-200",
-      footer: "bg-zinc-800 border-zinc-700 text-zinc-500",
-    },
-    light: {
-      header: "bg-gray-200 border-gray-300",
-      tab: {
-        active: "bg-gray-100 text-gray-800",
-        inactive: "bg-gray-200 text-gray-600 hover:bg-gray-200",
-      },
-      content: "bg-gray-100 text-gray-800",
-      footer: "bg-gray-200 border-gray-200 text-gray-500",
-    },
-  };
-
-  // Determine which theme classes to use
-  const currentTheme =
-    theme === "system"
-      ? document.documentElement.classList.contains("dark")
-        ? "dark"
-        : "light"
-      : theme;
-
-  const classes = themeClasses[currentTheme as keyof typeof themeClasses];
-
   return (
     <div
       className={cn(
@@ -337,7 +330,9 @@ export default function Terminal() {
           <div key={index} className="mb-4">
             {cmd.input && (
               <div className="flex">
-                <span className="text-emerald-400 mr-2">guest@terminal:~$</span>
+                <span className={cn(classes.text.heading, "mr-2")}>
+                  guest@terminal:~$
+                </span>
                 <span>{cmd.input}</span>
               </div>
             )}
@@ -347,7 +342,9 @@ export default function Terminal() {
 
         {/* Current input line */}
         <form onSubmit={handleSubmit} className="flex">
-          <span className="text-emerald-400 mr-2">guest@terminal:~$</span>
+          <span className={cn(classes.text.heading, "mr-2")}>
+            guest@terminal:~$
+          </span>
           <div className="flex-1 relative">
             <input
               ref={inputRef}
