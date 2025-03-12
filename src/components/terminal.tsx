@@ -12,6 +12,20 @@ import cv from "./commands/cv";
 import { theme as themecmd } from "./commands/theme";
 import { ThemeType, TerminalTabType } from "@/types/terminal";
 
+/**
+ * Renders a terminal interface simulating a multi-tab command-line environment.
+ *
+ * This component provides a fully interactive terminal experience with features such as:
+ * - Dynamic theming based on dark, light, or system preferences, persistently stored in localStorage.
+ * - Multi-tab support with individual command histories and the ability to add or close tabs.
+ * - Blinking cursor effect, auto-focus on the input field, and automatic scrolling to the latest command.
+ * - Command processing for built-in commands like "help", "clear", "date", "whoami", "echo", "theme", and "cv".
+ *
+ * The component leverages React hooks (useState, useEffect, useRef) to handle state management and side effects.
+ *
+ * @example
+ * <Terminal />
+ */
 export default function Terminal() {
   //----------------------------------------------------------------------------------------
   // Vars

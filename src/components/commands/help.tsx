@@ -1,3 +1,11 @@
+/**
+ * Renders a help message displaying available terminal commands.
+ *
+ * The component returns a JSX element that lists various commands (e.g., help, clear, date, echo, whoami, theme, cv)
+ * along with their descriptions. Command names are styled using a custom CSS class.
+ *
+ * @returns A JSX element containing the structured help information.
+ */
 export default function help() {
   return (
     <div className="space-y-1">

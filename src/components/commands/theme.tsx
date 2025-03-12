@@ -1,6 +1,18 @@
 import { ThemeType } from "@/types/terminal";
 import { Dispatch, SetStateAction } from "react";
 
+/**
+ * Processes a theme command to either display the current theme information or update the theme.
+ *
+ * Splits the given command string and, if no additional options are provided, returns a JSX element that shows
+ * the current theme with usage instructions and available options. When a valid theme option (-d/--dark, -l/--light,
+ * or -s/--system) is supplied, it updates the theme via the state updater and returns a confirmation message. An
+ * unrecognized option results in a JSX element with an error message.
+ *
+ * @param flag - Command input string that may contain a theme option.
+ * @param theme - The currently active theme.
+ * @returns A confirmation message or a JSX element with usage information or an error message.
+ */
 export function theme(
   flag: string,
   setTheme: Dispatch<SetStateAction<ThemeType>>,

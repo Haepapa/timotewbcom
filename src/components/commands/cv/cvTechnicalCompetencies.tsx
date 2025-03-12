@@ -1,3 +1,13 @@
+/**
+ * Renders a React component displaying technical competencies, programming languages, and technologies.
+ *
+ * This component organizes information into three sections:
+ * - Technical Competencies: Lists skills such as Statistical Analysis and Data Engineering.
+ * - Programming Languages: Enumerates languages including Python, SQL, Go, and others.
+ * - Technologies: Outlines tools and platforms like Azure, Snowflake, and Figma.
+ *
+ * @returns A JSX element representing the structured display of competencies.
+ */
 export default function cvTechnicalCompetencies() {
   return (
     <div className="space-y-1">

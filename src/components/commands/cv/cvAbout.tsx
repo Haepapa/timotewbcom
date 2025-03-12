@@ -1,3 +1,11 @@
+/**
+ * Renders the "About Me" section of a curriculum vitae.
+ *
+ * This React functional component returns a static block containing a header and two paragraphs.
+ * The header displays a bold "About Me" title, while the paragraphs provide a brief overview of
+ * the subject's experience as a technical lead in data analytics and engineering, along with their
+ * career aspirations.
+ */
 export default function cvAbout() {
   return (
     <div className="space-y-1">

@@ -1,3 +1,11 @@
+/**
+ * Renders a React component that displays user, role, and session information.
+ *
+ * The component shows three paragraphs:
+ * - "User: guest"
+ * - "Role: visitor"
+ * - "Session: " followed by a randomly generated string.
+ */
 export default function whoami() {
   return (
     <div className="space-y-1">
