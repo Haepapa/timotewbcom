@@ -32,7 +32,7 @@ export default function help() {
       </p>
       <p className="ml-4">-a, --about - About Me</p>
       <p className="ml-4">
-        -tc, --technical-competencies - My technical competencies
+        -t, --technical-competencies - My technical competencies
       </p>
     </div>
   );

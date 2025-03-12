@@ -2,7 +2,11 @@ import cvAbout from "./cv/cvAbout";
 import cvTechnicalCompetencies from "./cv/cvTechnicalCompetencies";
 
 export default function cv(flags: string) {
+  if (!flags) {
+    flags = "";
+  }
   const args = flags.split(" ");
+  const option = args.length > 1 ? args[1].toLowerCase() : "";
   if (args.length === 1) {
     return (
       <div className="space-y-1">
@@ -13,22 +17,18 @@ export default function cv(flags: string) {
         <p>Options:</p>
         <p className="ml-4">-a, --about - About me</p>
         <p className="ml-4">
-          -tc, --technical-competencies - My technical competencies
+          -t, --technical-competencies - My technical competencies
         </p>
       </div>
     );
   } else {
-    if (args[1].toLowerCase() === "-a" || args[1].toLowerCase() === "--about") {
+    const arg = args[1].toLowerCase();
+    if (option === "-a" || option === "--about") {
       return cvAbout();
-    } else if (
-      args[1].toLowerCase() === "-t" ||
-      args[1].toLowerCase() === "--technical-competencies"
-    ) {
+    } else if (arg === "-t" || arg === "--technical-competencies") {
       return cvTechnicalCompetencies();
     } else {
-      return (
-        <div className="space-y-1">Unknown option {args[1].toLowerCase()}.</div>
-      );
+      return <div className="space-y-1">Unknown option {option}.</div>;
     }
   }
 }

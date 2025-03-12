@@ -66,14 +66,6 @@ export default function Terminal() {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
 
-  // Determine which theme classes to use
-  const currentTheme =
-    theme === "system"
-      ? document.documentElement.classList.contains("dark")
-        ? "dark"
-        : "light"
-      : theme;
-
   //----------------------------------------------------------------------------------------
   // Tabs
   //----------------------------------------------------------------------------------------
