@@ -48,6 +48,8 @@ export default function help() {
       <p className="ml-4">
         -t, --technical-competencies - My technical competencies
       </p>
+      <p className="ml-4">-e, --experience - My experience</p>
+      <p className="ml-4">-q, --qualifications - My qualifications</p>
     </div>
   );
 }
