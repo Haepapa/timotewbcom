@@ -4,7 +4,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-export default function anz_cs() {
+export default function anz_sc() {
   return (
     <div className="mt-2">
       <AccordionItem value="anz_cs">
