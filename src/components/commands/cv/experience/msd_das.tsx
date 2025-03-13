@@ -25,10 +25,10 @@ export default function msd_das() {
             I collaborated with business units and source system owners to
             understand reporting and analytical needs, translating these into
             tailored solutions, including automated ministerial reporting and
-            benefits analysis and analysis. I facilitated Agile practices as a
-            Scrum Master, led workshops, and supported end-users with training
-            in analytical tools, while contributing to technical development and
-            data warehousing tasks.
+            benefits analysis. I facilitated Agile practices as a Scrum Master,
+            led workshops, and supported end-users with training in analytical
+            tools, while contributing to technical development and data
+            warehousing tasks.
           </p>
         </AccordionContent>
       </AccordionItem>
