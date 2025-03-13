@@ -24,7 +24,7 @@ export default function fmg_ia() {
           <p>
             I managed the prioritisation and allocation of tasks for the team,
             facilitated Agile practices, and collaborated with stakeholders to
-            address analytical and reporting needs, including the development
+            address analytical and reporting needs, including the development of
             data products for senior management and operational users. I
             maintained and optimised the BI and Data Warehouse platform,
             overseeing user authentication, data backups, batch scheduling, and
