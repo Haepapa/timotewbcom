@@ -1,38 +1,55 @@
+/**
+ * Renders a CV section that displays technical competencies.
+ *
+ * This React functional component outputs a structured layout featuring:
+ * - A title labeled "Technical Competencies".
+ * - An unordered list of general technical competencies (e.g., Statistical Analysis, Data Visualisation).
+ * - An unordered list of programming languages (e.g., Python, SQL, Go).
+ * - An unordered list of technologies (e.g., Azure, Snowflake, Databricks).
+ *
+ * The component leverages semantic HTML to improve accessibility and readability.
+ */
 export default function cvTechnicalCompetencies() {
   return (
     <div className="space-y-1">
       <span className="font-semibold">Technical Competencies</span>
-      <p className="mt-2">
-        <p className="ml-4">- Statistical Analysis</p>
-        <p className="ml-4">- Data Visualisation</p>
-        <p className="ml-4">- Data Engineering</p>
-        <p className="ml-4">- Data Architecture</p>
-        <p className="ml-4">- Business Intelligence</p>
-      </p>
-      <p className="mt-2">
+      <div className="mt-2">
+        <ul className="list-disc list-inside ml-4">
+          <li>Statistical Analysis</li>
+          <li>Data Visualisation</li>
+          <li>Data Engineering</li>
+          <li>Data Architecture</li>
+          <li>Business Intelligence</li>
+        </ul>
+      </div>
+      <div className="mt-2">
         Programming Languages:
-        <p className="ml-4">- Python</p>
-        <p className="ml-4">- SQL</p>
-        <p className="ml-4">- Go</p>
-        <p className="ml-4">- Typescript</p>
-        <p className="ml-4">- Pyspark</p>
-        <p className="ml-4">- SAS</p>
-        <p className="ml-4">- VBA</p>
-        <p className="ml-4">- Terraform</p>
-      </p>
-      <p className="mt-2">
+        <ul className="list-disc list-inside ml-4">
+          <li>Python</li>
+          <li>SQL</li>
+          <li>Go</li>
+          <li>Typescript</li>
+          <li>SAS</li>
+          <li>VBA</li>
+        </ul>
+      </div>
+      <div className="mt-2">
         Technologies:
-        <p className="ml-4">- Azure</p>
-        <p className="ml-4">- Snowflake</p>
-        <p className="ml-4">- Databricks</p>
-        <p className="ml-4">- Power BI</p>
-        <p className="ml-4">- Netezza</p>
-        <p className="ml-4">- MS SQL Server</p>
-        <p className="ml-4">- Mongo DB</p>
-        <p className="ml-4">- Git</p>
-        <p className="ml-4">- Linux systems</p>
-        <p className="ml-4">- Figma</p>
-      </p>
+        <ul className="list-disc list-inside ml-4">
+          <li>Azure</li>
+          <li>Snowflake</li>
+          <li>Databricks</li>
+          <li>Power BI</li>
+          <li>Netezza</li>
+          <li>MS SQL Server</li>
+          <li>Mongo DB</li>
+          <li>Git</li>
+          <li>Linux systems</li>
+          <li>Figma</li>
+          <li>Pyspark</li>
+          <li>Terraform</li>
+        </ul>
+      </div>
     </div>
   );
 }

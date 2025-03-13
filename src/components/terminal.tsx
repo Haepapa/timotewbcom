@@ -12,6 +12,13 @@ import cv from "./commands/cv";
 import { theme as themecmd } from "./commands/theme";
 import { ThemeType, TerminalTabType } from "@/types/terminal";
 
+/**
+ * Renders a terminal interface with multi-tab support, command processing, and dynamic theme management.
+ *
+ * This React component simulates a command-line terminal by displaying a header with tabs, a scrollable content area for command history, an input form for entering commands, and a footer that shows version information and the current time. It processes built-in commands (such as "theme", "cv", "help", "clear", "date", "whoami", and "echo"), manages theme settings (dark, light, or system) synchronized with local storage and system preferences, and implements user-friendly features including a blinking cursor, auto-focus on click, and auto-scrolling of terminal content.
+ *
+ * @component
+ */
 export default function Terminal() {
   //----------------------------------------------------------------------------------------
   // Vars
@@ -65,14 +72,6 @@ export default function Terminal() {
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
-
-  // Determine which theme classes to use
-  const currentTheme =
-    theme === "system"
-      ? document.documentElement.classList.contains("dark")
-        ? "dark"
-        : "light"
-      : theme;
 
   //----------------------------------------------------------------------------------------
   // Tabs

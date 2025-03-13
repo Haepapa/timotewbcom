@@ -194,7 +194,6 @@
   }
 }
 
-@import "tailwindcss";
 @layer components {
   .cust-command-style {
     border-radius: var(--radius-sm);
