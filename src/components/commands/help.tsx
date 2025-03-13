@@ -1,3 +1,17 @@
+/**
+ * Renders a help message listing available terminal commands.
+ *
+ * This component displays a collection of command instructions including details for:
+ * - Displaying this help message
+ * - Clearing the terminal
+ * - Showing the current date and time
+ * - Echoing user-supplied text
+ * - Displaying user information
+ * - Changing the terminal theme (with options for dark, light, or system preferences)
+ * - Viewing the CV (with sub-options for About Me and technical competencies)
+ *
+ * @returns The JSX element representing the help message.
+ */
 export default function help() {
   return (
     <div className="space-y-1">
