@@ -1,4 +1,6 @@
 import cvAbout from "./cv/cvAbout";
+import cvExperience from "./cv/cvExperience";
+import cvQualifications from "./cv/cvQualifications";
 import cvTechnicalCompetencies from "./cv/cvTechnicalCompetencies";
 
 /**
@@ -28,6 +30,8 @@ export default function cv(flags: string) {
         <p className="ml-4">
           -t, --technical-competencies - My technical competencies
         </p>
+        <p className="ml-4">-e, --experience - My experience</p>
+        <p className="ml-4">-q, --qualifications - My qualifications</p>
       </div>
     );
   } else {
@@ -36,6 +40,10 @@ export default function cv(flags: string) {
       return cvAbout();
     } else if (arg === "-t" || arg === "--technical-competencies") {
       return cvTechnicalCompetencies();
+    } else if (arg === "-e" || arg === "--experience") {
+      return cvExperience();
+    } else if (arg === "-q" || arg === "--qualifications") {
+      return cvQualifications();
     } else {
       return <div className="space-y-1">Unknown option {option}.</div>;
     }
