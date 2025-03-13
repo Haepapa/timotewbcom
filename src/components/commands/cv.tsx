@@ -1,6 +1,15 @@
 import cvAbout from "./cv/cvAbout";
 import cvTechnicalCompetencies from "./cv/cvTechnicalCompetencies";
 
+/**
+ * Renders a Curriculum Vitae view based on provided command-like flags.
+ *
+ * When no option is specified, it displays a usage guide with available CV sections. Specifying "-a" or "--about" returns the "About Me" section, while "-t" or "--technical-competencies" returns the technical competencies section. Any unrecognized option yields an error message.
+ *
+ * @param flags A space-separated string of options determining which CV section to display.
+ *
+ * @returns A JSX element corresponding to the selected CV section or the usage guide.
+ */
 export default function cv(flags: string) {
   if (!flags) {
     flags = "";

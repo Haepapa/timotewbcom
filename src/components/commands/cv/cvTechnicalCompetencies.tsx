@@ -1,3 +1,14 @@
+/**
+ * Renders a CV section that displays technical competencies.
+ *
+ * This React functional component outputs a structured layout featuring:
+ * - A title labeled "Technical Competencies".
+ * - An unordered list of general technical competencies (e.g., Statistical Analysis, Data Visualisation).
+ * - An unordered list of programming languages (e.g., Python, SQL, Go).
+ * - An unordered list of technologies (e.g., Azure, Snowflake, Databricks).
+ *
+ * The component leverages semantic HTML to improve accessibility and readability.
+ */
 export default function cvTechnicalCompetencies() {
   return (
     <div className="space-y-1">
