@@ -137,7 +137,7 @@ export default function Terminal() {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, []);
+  }, [tabs, activeTabId]);
 
   //----------------------------------------------------------------------------------------
   // Commands
