@@ -11,6 +11,7 @@ import welcome from "./commands/welcome";
 import cv from "./commands/cv";
 import { theme as themecmd } from "./commands/theme";
 import { ThemeType, TerminalTabType } from "@/types/terminal";
+import SpaceInvaders from "./games/SpaceInvaders";
 
 /**
  * Renders a terminal interface with multi-tab support, command processing, and dynamic theme management.
@@ -25,6 +26,8 @@ export default function Terminal() {
   //----------------------------------------------------------------------------------------
   const [activeTabId, setActiveTabId] = useState("1");
   const [cursorVisible, setCursorVisible] = useState(true);
+  const [gameMode, setGameMode] = useState(false);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
 
@@ -132,6 +135,45 @@ export default function Terminal() {
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
+  // Command history navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (gameMode) return;
+
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const filteredHistory = activeTab.history.filter(h => h.input.trim() !== "");
+        if (filteredHistory.length === 0) return;
+
+        setHistoryIndex(prev => {
+          const nextIndex = prev + 1;
+          if (nextIndex >= filteredHistory.length) return 0;
+
+          const cmd = filteredHistory[filteredHistory.length - 1 - nextIndex].input;
+          updateTabInput(cmd);
+          return nextIndex;
+        });
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setHistoryIndex(prev => {
+          if (prev === -1) return -1;
+          const nextIndex = prev - 1;
+          if (nextIndex < 0) {
+            updateTabInput("");
+            return -1;
+          }
+          const filteredHistory = activeTab.history.filter(h => h.input.trim() !== "");
+          const cmd = filteredHistory[filteredHistory.length - 1 - nextIndex].input;
+          updateTabInput(cmd);
+          return nextIndex;
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeTab, gameMode]);
+
   // Auto scroll to bottom
   useEffect(() => {
     if (terminalRef.current) {
@@ -154,6 +196,21 @@ export default function Terminal() {
       output = themecmd(command, setTheme, theme);
     } else if (command.toLowerCase().startsWith("cv")) {
       output = cv(command);
+    } else if (command.toLowerCase().startsWith("play")) {
+      const args = command.split(" ");
+      if (args.length === 3 && args[1] === "--game" && args[2].toLowerCase() === "space_invaders") {
+        setGameMode(true);
+        updateTabInput("");
+        return;
+      } else {
+        output = (
+          <span className="text-red-400">
+            Command not found: {command}. Type{" "}
+            <span className="text-term-blue">help</span> for available
+            commands.
+          </span>
+        );
+      }
     } else {
       switch (command.toLowerCase()) {
         case "help":
@@ -206,6 +263,7 @@ export default function Terminal() {
       )
     );
 
+    setHistoryIndex(-1);
     updateTabInput("");
   };
 
@@ -294,48 +352,54 @@ export default function Terminal() {
         ref={terminalRef}
         className="p-4 h-[calc(100vh-80px)] overflow-y-auto font-mono text-sm bg-tab-active-bg text-new-tab-btn-text-hover"
       >
-        {activeTab.history.map((cmd, index) => (
-          <div key={index} className="mb-4">
-            {cmd.input && (
-              <div className="flex">
-                <span className="text-term-blue mr-2">guest@terminal:~$</span>
-                <span>{cmd.input}</span>
+        {gameMode ? (
+          <SpaceInvaders onExit={() => setGameMode(false)} />
+        ) : (
+          <>
+            {activeTab.history.map((cmd, index) => (
+              <div key={index} className="mb-4">
+                {cmd.input && (
+                  <div className="flex">
+                    <span className="text-term-blue mr-2">guest@terminal:~$</span>
+                    <span>{cmd.input}</span>
+                  </div>
+                )}
+                <div className="mt-1 ml-0">{cmd.output}</div>
               </div>
-            )}
-            <div className="mt-1 ml-0">{cmd.output}</div>
-          </div>
-        ))}
+            ))}
 
-        {/* Current input line */}
-        <form onSubmit={handleSubmit} className="flex">
-          <span className="text-term-blue mr-2">guest@terminal:~$</span>
-          <div className="flex-1 relative">
-            <input
-              ref={inputRef}
-              type="text"
-              value={activeTab.input}
-              onChange={(e) => updateTabInput(e.target.value)}
-              className="w-full bg-transparent outline-none caret-transparent"
-              autoFocus
-            />
-            <span className="absolute left-0 top-0 whitespace-pre">
-              {activeTab.input}
-            </span>
-            <span
-              className={cn(
-                "absolute top-0 left-0 ml-[calc(1ch*var(--cursor-position))]",
-                cursorVisible ? "opacity-100" : "opacity-0"
-              )}
-              style={
-                {
-                  "--cursor-position": activeTab.input.length,
-                } as React.CSSProperties
-              }
-            >
-              ▎
-            </span>
-          </div>
-        </form>
+            {/* Current input line */}
+            <form onSubmit={handleSubmit} className="flex">
+              <span className="text-term-blue mr-2">guest@terminal:~$</span>
+              <div className="flex-1 relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={activeTab.input}
+                  onChange={(e) => updateTabInput(e.target.value)}
+                  className="w-full bg-transparent outline-none caret-transparent"
+                  autoFocus
+                />
+                <span className="absolute left-0 top-0 whitespace-pre">
+                  {activeTab.input}
+                </span>
+                <span
+                  className={cn(
+                    "absolute top-0 left-0 ml-[calc(1ch*var(--cursor-position))]",
+                    cursorVisible ? "opacity-100" : "opacity-0"
+                  )}
+                  style={
+                    {
+                      "--cursor-position": activeTab.input.length,
+                    } as React.CSSProperties
+                  }
+                >
+                  ▎
+                </span>
+              </div>
+            </form>
+          </>
+        )}
       </div>
 
       {/* Terminal footer */}

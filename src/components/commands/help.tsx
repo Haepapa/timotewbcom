@@ -9,6 +9,7 @@
  * - Displaying user information
  * - Changing the terminal theme (with options for dark, light, or system preferences)
  * - Viewing the CV (with sub-options for About Me and technical competencies)
+ * - Launching games
  *
  * @returns The JSX element representing the help message.
  */
@@ -50,6 +51,12 @@ export default function help() {
       </p>
       <p className="ml-4">-e, --experience - My experience</p>
       <p className="ml-4">-q, --qualifications - My qualifications</p>
+      <p>
+        <span className="cust-command-style">play</span> [option] - Launch a game
+      </p>
+      <p className="ml-4">
+        --game space_invaders - Launch Space Invaders
+      </p>
     </div>
   );
 }
