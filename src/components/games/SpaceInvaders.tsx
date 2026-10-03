@@ -65,11 +65,13 @@ export default function SpaceInvaders({ onExit }: { onExit: () => void }) {
       frameCountRef.current++;
 
       // Player Movement
-      if (keysPressed.current.has('ArrowLeft') && playerX > 0) {
-        setPlayerX(prev => prev - 1);
-      }
-      if (keysPressed.current.has('ArrowRight') && playerX < WIDTH - 1) {
-        setPlayerX(prev => prev + 1);
+      if (frameCountRef.current % 4 === 0) {
+        if (keysPressed.current.has('ArrowLeft') && playerX > 0) {
+          setPlayerX(prev => prev - 1);
+        }
+        if (keysPressed.current.has('ArrowRight') && playerX < WIDTH - 1) {
+          setPlayerX(prev => prev + 1);
+        }
       }
 
       // Fire Bullet
